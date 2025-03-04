@@ -2,6 +2,21 @@ const express = require('express');
 const router = express.Router();
 const Task = require('../models/Task');
 
+//Route to update the status of a task
+router.post('/update-status/:id', async (req, res) => {
+    const { status } = req.body;
+
+    try {
+        const task = await Task.findByIdAndUpdate(req.params.id, { status }, { new: true });
+        res.status(200).json(task);
+    } catch (err) {
+        console.error('Error updating task status:', err);
+        res.status(500).send('Error updating task status');
+    }
+});
+
+module.exports = router;
+
 // All tasks
 router.get('/', async (req, res) => {
     try {
