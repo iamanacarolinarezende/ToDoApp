@@ -34,10 +34,14 @@
                     <div class="task-actions">
                         <form action="/complete/<%= task._id %>" method="POST" style="display: inline;">
                             <button type="submit" class="complete">
-                                <%= task.completed ? 'Undo' : 'Complete' %>
+                                <%= task.completed ? 'Undo' : 'Done' %>
                             </button>
                         </form>
-                        <form action="/delete/<%= task._id %>" method="POST" style="display: inline;">
+                        <form 
+                            action="/delete/<%= task._id %>" 
+                            method="POST" style="display: inline;"
+                            style="display: inline;"
+                            onsubmit="return confirm('Are you sure you want to delete this task?');">
                             <button type="submit" class="delete">Delete</button>
                         </form>
                     </div>
