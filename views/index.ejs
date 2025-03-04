@@ -1,0 +1,23 @@
+<form action="/add" method="POST">
+    <input type="text" name="description" placeholder="Nova tarefa" required>
+    <select name="priority">
+        <option value="hight">High</option>
+        <option value="medium" selected>Medium</option>
+        <option value="low">Low</option>
+    </select>
+    <button type="submit">Add</button>
+</form>
+
+<ul>
+    <% tasks.forEach(task => { %>
+        <li class="<%= task.completed ? 'completed' : '' %>">
+            <span><%= task.description %> (<%= task.priority %>)</span>
+            <form action="/complete/<%= task._id %>" method="POST" style="display: inline;">
+                <button type="submit"><%= task.completed ? 'Undo' : 'Finish' %></button>
+            </form>
+            <form action="/delete/<%= task._id %>" method="POST" style="display: inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+    <% }) %>
+</ul>
