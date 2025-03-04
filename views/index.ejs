@@ -1,23 +1,49 @@
-<form action="/add" method="POST">
-    <input type="text" name="description" placeholder="New Task" required>
-    <select name="priority">
-        <option value="hight">High</option>
-        <option value="medium" selected>Medium</option>
-        <option value="low">Low</option>
-    </select>
-    <button type="submit">Add</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
 
-<ul>
-    <% tasks.forEach(task => { %>
-        <li class="<%= task.completed ? 'completed' : '' %>">
-            <span><%= task.description %> (<%= task.priority %>)</span>
-            <form action="/complete/<%= task._id %>" method="POST" style="display: inline;">
-                <button type="submit"><%= task.completed ? 'Undo' : 'Finish' %></button>
-            </form>
-            <form action="/delete/<%= task._id %>" method="POST" style="display: inline;">
-                <button type="submit">Delete</button>
-            </form>
-        </li>
-    <% }) %>
-</ul>
+        <!-- Form to add tasks -->
+        <form action="/add" method="POST">
+            <input type="text" name="description" placeholder="New task" required>
+            <select name="priority">
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+            <button type="submit">Add</button>
+        </form>
+
+        <!-- Task list -->
+        <ul>
+            <% tasks.forEach(task => { %>
+                <li>
+                    <div class="task-info">
+                        <span><%= task.description %></span>
+                        <div class="task-priority <%= task.priority %>">
+                            <%= task.priority %>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <form action="/complete/<%= task._id %>" method="POST" style="display: inline;">
+                            <button type="submit" class="complete">
+                                <%= task.completed ? 'Undo' : 'Complete' %>
+                            </button>
+                        </form>
+                        <form action="/delete/<%= task._id %>" method="POST" style="display: inline;">
+                            <button type="submit" class="delete">Delete</button>
+                        </form>
+                    </div>
+                </li>
+            <% }) %>
+        </ul>
+    </div>
+</body>
+</html>
