@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const taskRoutes = require('./routes/tasks');
+const taskRoutes = require('./routes/Tasks');
 
 const app = express();
  
