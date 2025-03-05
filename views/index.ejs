@@ -12,13 +12,13 @@
 
         <!-- Form to add tasks -->
         <form action="/add" method="POST">
-            <input type="text" name="description" placeholder="New task" required>
+            <input type="text" name="description" placeholder="Task Description" required>
             <select name="priority">
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
                 <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
             </select>
-            <button type="submit">Add</button>
+            <button type="submit">Add Task</button>
         </form>
 
         <!-- Kanban columns -->
@@ -40,11 +40,12 @@
                             </div>
                             <div class="task-actions">
                                 <button 
-                                    class="complete" 
-                                    onclick="updateStatus('<%= task._id %>', 'done')"
+                                    class="change-status" 
+                                    onclick="updateStatus('<%= task._id %>', 'doing')"
                                 >
-                                    Done
+                                    Move to Doing
                                 </button>
+
                                 <button 
                                     class="delete" 
                                     onclick="deleteTask('<%= task._id %>')"
@@ -74,11 +75,12 @@
                             </div>
                             <div class="task-actions">
                                 <button 
-                                    class="complete" 
+                                    class="change-status" 
                                     onclick="updateStatus('<%= task._id %>', 'done')"
                                 >
-                                    Done
+                                    Move to Done
                                 </button>
+
                                 <button 
                                     class="delete" 
                                     onclick="deleteTask('<%= task._id %>')"
@@ -108,11 +110,12 @@
                             </div>
                             <div class="task-actions">
                                 <button 
-                                    class="undo" 
+                                    class="change-status" 
                                     onclick="updateStatus('<%= task._id %>', 'todo')"
                                 >
-                                    Undo
+                                    Start Over
                                 </button>
+
                                 <button 
                                     class="delete" 
                                     onclick="deleteTask('<%= task._id %>')"
@@ -131,24 +134,33 @@
     <script>
         // Update task status Function
         async function updateStatus(taskId, status) {
+            console.log('🔄 Iniciando atualização de status:', { taskId, status });
+
             try {
                 const response = await fetch(`/update-status/${taskId}`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
+                    headers: { 
+                        'Content-Type': 'application/json' 
                     },
-                    body: JSON.stringify({ status })  
+                    body: JSON.stringify({ status })
                 });
 
+                const responseData = await response.json();
+
                 if (response.ok) {
-                    console.log('Task status updated successfully');
+                    console.log('✅ Status atualizado com sucesso:', responseData);
+                    return true;
                 } else {
-                    console.error('Failed to update task status');
+                    console.error('❌ Falha na atualização:', responseData);
+                    return false;
                 }
             } catch (error) {
-                console.error('Error updating task status:', error);
+                console.error('🚨 Erro na requisição:', error);
+                return false;
             }
         }
+
+
 
         // Delete task Function
         async function deleteTask(taskId) {
@@ -170,40 +182,50 @@
         }
 
         // Drag and drop
-        const columns = document.querySelectorAll('.column');
-    
-            columns.forEach(column => {
-                column.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    const draggingItem = document.querySelector('.dragging');
-                    if (draggingItem) {
-                        column.querySelector('.task-list').appendChild(draggingItem); 
-                    }
-                });
-                
-                column.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    const draggingItem = document.querySelector('.dragging');
-                    if (draggingItem) {
-                        const newStatus = column.querySelector('.task-list').dataset.status;
-                        const taskId = draggingItem.dataset.taskId;
-
-                        updateStatus(taskId, newStatus);
-                    }
-                });
-            });
-
+        document.addEventListener('DOMContentLoaded', () => {
             const taskItems = document.querySelectorAll('.task-item');
+            const columns = document.querySelectorAll('.column');
 
             taskItems.forEach(item => {
-                item.addEventListener('dragstart', () => {
-                    item.classList.add('dragging'); 
+                item.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', item.dataset.taskId);
+                    item.classList.add('dragging');
                 });
 
                 item.addEventListener('dragend', () => {
-                    item.classList.remove('dragging');  
+                    item.classList.remove('dragging');
                 });
             });
+
+            columns.forEach(column => {
+                column.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+
+                column.addEventListener('drop', async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const taskId = e.dataTransfer.getData('text/plain');
+                    const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+                    const newStatus = column.querySelector('.task-list').dataset.status;
+
+                    console.log('🎯 Drop detectado:', { taskId, newStatus });
+
+                    if (taskElement && taskId) {
+                        const success = await updateStatus(taskId, newStatus);
+                        
+                        if (success) {
+                            const targetList = column.querySelector('.task-list');
+                            targetList.appendChild(taskElement);
+                        } else {
+                            alert('Erro ao atualizar tarefa. Tente novamente.');
+                        }
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
