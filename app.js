@@ -16,7 +16,7 @@ mongoose.connect(mongoURI, {
 .then(() => console.log('Conectado ao MongoDB Atlas'))
 .catch(err => console.error('Erro ao conectar ao MongoDB Atlas:', err));
 
-// Configurações do Express
+// Express Config
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('public'));
