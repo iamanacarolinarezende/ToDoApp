@@ -39,12 +39,16 @@
                                 </div>
                             </div>
                             <div class="task-actions">
-                                <button 
+                                <!-- <button 
                                     class="change-status" 
                                     onclick="updateStatus('<%= task._id %>', 'doing')"
                                 >
                                     Move to Doing
-                                </button>
+                                </button> -->
+                                
+                                <div class="task-created-at">
+                                    Criado em: <%= new Date(task.createdAt).toLocaleDateString('pt-BR') %>
+                                </div>
 
                                 <button 
                                     class="delete" 
@@ -73,13 +77,18 @@
                                     <%= task.priority %>
                                 </div>
                             </div>
+                            
                             <div class="task-actions">
-                                <button 
+                                <!-- <button 
                                     class="change-status" 
                                     onclick="updateStatus('<%= task._id %>', 'done')"
                                 >
                                     Move to Done
-                                </button>
+                                </button> -->
+
+                                <div class="task-created-at">
+                                    Criado em: <%= new Date(task.createdAt).toLocaleDateString('pt-BR') %>
+                                </div>
 
                                 <button 
                                     class="delete" 
@@ -108,13 +117,18 @@
                                     <%= task.priority %>
                                 </div>
                             </div>
+                            
                             <div class="task-actions">
-                                <button 
+                                <!-- <button 
                                     class="change-status" 
                                     onclick="updateStatus('<%= task._id %>', 'todo')"
                                 >
                                     Start Over
-                                </button>
+                                </button> -->
+
+                                <div class="task-created-at">
+                                    Criado em: <%= new Date(task.createdAt).toLocaleDateString('pt-BR') %>
+                                </div>
 
                                 <button 
                                     class="delete" 

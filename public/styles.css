@@ -103,6 +103,7 @@ button[type="submit"]:hover {
     display: flex;
     align-items: center;
     gap: 10px;
+    justify-content: space-between;
 }
 
 .task-priority {
@@ -132,6 +133,7 @@ button[type="submit"]:hover {
     display: flex;
     gap: 5px;
     margin-top: 10px;
+    justify-content: space-between;
 }
 
 .task-actions button {
@@ -174,4 +176,10 @@ button[type="submit"]:hover {
     opacity: 0.5;
     transform: scale(1.05);
     transition: all 0.3s ease;
+}
+
+.task-created-at {
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 5px;
 }
