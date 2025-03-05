@@ -8,8 +8,8 @@ body {
 
 .container {
     padding: 2rem;
-    max-width: 800px; /* Limita a largura do container */
-    margin: 0 auto; /* Centraliza o container */
+    max-width: 1200px; 
+    margin: 0 auto; 
 }
 
 h1 {
@@ -24,7 +24,7 @@ form {
     display: flex;
     gap: 10px;
     margin-bottom: 1.5rem;
-    align-items: center; /* Alinha os itens verticalmente */
+    align-items: center; 
 }
 
 input[type="text"] {
@@ -33,7 +33,7 @@ input[type="text"] {
     border-radius: 5px;
     font-size: 1rem;
     flex: 1;
-    max-width: 200px; /* Largura máxima para o campo de texto */
+    max-width: 200px; 
 }
 
 select {
@@ -41,7 +41,7 @@ select {
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
-    max-width: 100px; /* Largura máxima para o campo de seleção */
+    max-width: 100px; 
 }
 
 button[type="submit"] {
@@ -168,4 +168,10 @@ button[type="submit"]:hover {
 
 .task-actions button.delete:hover {
     background-color: #e64a4a;
+}
+
+.task-item.dragging {
+    opacity: 0.5;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
 }

@@ -2,21 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Task = require('../models/Task');
 
-//Route to update the status of a task
-router.post('/update-status/:id', async (req, res) => {
-    const { status } = req.body;
-
-    try {
-        const task = await Task.findByIdAndUpdate(req.params.id, { status }, { new: true });
-        res.status(200).json(task);
-    } catch (err) {
-        console.error('Error updating task status:', err);
-        res.status(500).send('Error updating task status');
-    }
-});
-
-module.exports = router;
-
 // All tasks
 router.get('/', async (req, res) => {
     try {
@@ -28,19 +13,20 @@ router.get('/', async (req, res) => {
     }
 });
 
-// New tasks
+// Add a new task
 router.post('/add', async (req, res) => {
     const { description, priority } = req.body;
+    
     try {
-        await Task.create({ description, priority });
-        res.redirect('/');
+        await Task.create({ description, priority, status: "todo" });
+        res.status(200).json({ success: true });
     } catch (err) {
         console.error(err);
         res.status(500).send('Error adding task');
     }
 });
 
-// Finish tasks
+// Complete task
 router.post('/complete/:id', async (req, res) => {
     try {
         const task = await Task.findById(req.params.id);
@@ -53,7 +39,7 @@ router.post('/complete/:id', async (req, res) => {
     }
 });
 
-// Delete tasks
+// Delete task
 router.post('/delete/:id', async (req, res) => {
     try {
         await Task.findByIdAndDelete(req.params.id);
@@ -64,4 +50,23 @@ router.post('/delete/:id', async (req, res) => {
     }
 });
 
+// Update task
+router.post('/update-status/:id', async (req, res) => {
+    const { status } = req.body;
+
+    try {
+        const task = await Task.findById(req.params.id);
+        if (!task) {
+            return res.status(404).send('Task not found');
+        }
+
+        task.status = status; 
+        await task.save();
+        res.status(200).json(task); 
+        console.error('Error updating task status:', err);
+        res.status(500).send('Error updating task status');
+    }
+});
+
+// Router export
 module.exports = router;

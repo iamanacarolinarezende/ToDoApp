@@ -127,9 +127,9 @@
         </div>
     </div>
 
-    <!-- Script para drag and drop e atualizações -->
+    <!-- Script for drag and drop and updates -->
     <script>
-        // Função para atualizar o status de uma tarefa
+        // Update task status Function
         async function updateStatus(taskId, status) {
             try {
                 const response = await fetch(`/update-status/${taskId}`, {
@@ -137,11 +137,11 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ status }),
+                    body: JSON.stringify({ status })  
                 });
 
                 if (response.ok) {
-                    location.reload(); // Recarrega a página para refletir as mudanças
+                    console.log('Task status updated successfully');
                 } else {
                     console.error('Failed to update task status');
                 }
@@ -150,7 +150,7 @@
             }
         }
 
-        // Função para deletar uma tarefa
+        // Delete task Function
         async function deleteTask(taskId) {
             if (confirm('Are you sure you want to delete this task?')) {
                 try {
@@ -159,7 +159,7 @@
                     });
 
                     if (response.ok) {
-                        location.reload(); // Recarrega a página para refletir as mudanças
+                        location.reload();  
                     } else {
                         console.error('Failed to delete task');
                     }
@@ -171,30 +171,39 @@
 
         // Drag and drop
         const columns = document.querySelectorAll('.column');
+    
+            columns.forEach(column => {
+                column.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    const draggingItem = document.querySelector('.dragging');
+                    if (draggingItem) {
+                        column.querySelector('.task-list').appendChild(draggingItem); 
+                    }
+                });
+                
+                column.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const draggingItem = document.querySelector('.dragging');
+                    if (draggingItem) {
+                        const newStatus = column.querySelector('.task-list').dataset.status;
+                        const taskId = draggingItem.dataset.taskId;
 
-        columns.forEach(column => {
-            column.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                const draggingItem = document.querySelector('.dragging');
-                column.querySelector('.task-list').appendChild(draggingItem);
+                        updateStatus(taskId, newStatus);
+                    }
+                });
             });
-        });
 
-        const taskItems = document.querySelectorAll('.task-item');
+            const taskItems = document.querySelectorAll('.task-item');
 
-        taskItems.forEach(item => {
-            item.addEventListener('dragstart', () => {
-                item.classList.add('dragging');
+            taskItems.forEach(item => {
+                item.addEventListener('dragstart', () => {
+                    item.classList.add('dragging'); 
+                });
+
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');  
+                });
             });
-
-            item.addEventListener('dragend', async () => {
-                item.classList.remove('dragging');
-                const newStatus = item.closest('.task-list').dataset.status;
-                const taskId = item.dataset.taskId;
-
-                await updateStatus(taskId, newStatus);
-            });
-        });
     </script>
 </body>
 </html>
